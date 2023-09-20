@@ -1,18 +1,18 @@
 package hunre.it.demo.service;
 
-import java.util.List;
-
 import hunre.it.demo.model.Employee;
+
+import java.util.List;
 
 
 public interface EmployeeService {
 
-	public List<Employee> findAll();
+  List<Employee> findAll();
 
-	public Employee findById(int theId);
+  Employee findById(int theId);
 
-	public void save(Employee theEmployee);
+  void save(Employee theEmployee);
 
-	public void deleteById(int theId);
+  void deleteById(int theId);
 
 }
