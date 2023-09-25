@@ -39,31 +39,14 @@ public class EmployeeController {
     return "/employee-form";
   }
 
-  @GetMapping("/update")
+  @GetMapping("/showFormForUpdate")
   public String showFormForUpdate(@RequestParam("employeeId") int theId, Model theModel) {
 
-    Optional <Employee> theEmployee = Optional.ofNullable(employeeService.findById(theId));
-    theEmployee.isPresent();
+    Employee theEmployee = employeeService.findById(theId);
+    theModel.addAttribute("employee", theEmployee);
 
     return "/employee-form";
   }
-
-  @GetMapping("/saveUpdate")
-  public String saveUpdate(Employee employee, BindingResult result, RedirectAttributes model) {
-    if (result.hasErrors()) {
-      return "/employee-form";
-    } else {
-      employeeService.save(employee);
-      model.addFlashAttribute("success", "Cập nhật thành công!");
-    }
-    return "redirect:/employees/list";
-  }
-//  @PutMapping("update")
-//  public String updateEmployee(@RequestParam("id") int id, Employee employee) {
-//
-//    Employee theEmployee = employeeService.findById(id, employee);
-//    return "/employee-form";
-//  }
 
   @GetMapping("/delete")
   public String deleteEmployee(@RequestParam("employeeId") int theId) {
