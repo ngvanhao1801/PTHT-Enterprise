@@ -5,12 +5,11 @@ import hunre.it.demo.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
-  private EmployeeRepository employeeRepository;
+  private final EmployeeRepository employeeRepository;
 
   public EmployeeServiceImpl(EmployeeRepository theEmployeeRepository) {
     employeeRepository = theEmployeeRepository;
@@ -22,16 +21,13 @@ public class EmployeeServiceImpl implements EmployeeService {
   }
 
   @Override
-  public Employee findById(int theId) {
-    Optional<Employee> result = employeeRepository.findById(theId);
-    Employee theEmployee;
-    if (result.isPresent()) {
-      theEmployee = result.get();
-    } else {
-      throw new RuntimeException("Did not find employee id - " + theId);
-    }
+  public Employee findById(Long id) {
+    return employeeRepository.findById(id).get();
+  }
 
-    return theEmployee;
+  @Override
+  public Employee updateEmployee(Employee employee) {
+    return employeeRepository.save(employee);
   }
 
   @Override
@@ -40,8 +36,8 @@ public class EmployeeServiceImpl implements EmployeeService {
   }
 
   @Override
-  public void deleteById(int theId) {
-    employeeRepository.deleteById(theId);
+  public void deleteById(Long id) {
+    employeeRepository.deleteById(id);
   }
 
 }

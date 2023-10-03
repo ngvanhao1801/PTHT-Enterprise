@@ -4,12 +4,9 @@ import hunre.it.demo.model.Employee;
 import hunre.it.demo.service.EmployeeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/employees")
@@ -36,31 +33,48 @@ public class EmployeeController {
     Employee theEmployee = new Employee();
     theModel.addAttribute("employees", theEmployee);
 
-    return "/employee-form";
-  }
-
-  @GetMapping("/showFormForUpdate")
-  public String showFormForUpdate(@RequestParam("employeeId") int theId, Model theModel) {
-
-    Employee theEmployee = employeeService.findById(theId);
-    theModel.addAttribute("employee", theEmployee);
-
-    return "/employee-form";
-  }
-
-  @GetMapping("/delete")
-  public String deleteEmployee(@RequestParam("employeeId") int theId) {
-
-    employeeService.deleteById(theId);
-
-    return "redirect:/employees/list";
+    return "create_employee";
   }
 
   @PostMapping("/save")
-  public String saveEmployee(@ModelAttribute("employee") Employee theEmployee) {
+  public String saveEmployee(@ModelAttribute("employees") Employee theEmployee) {
 
     employeeService.save(theEmployee);
 
     return "redirect:/employees/list";
   }
+
+  @GetMapping("/edit/{id}")
+  public String editStudentForm(@PathVariable Long id, Model model) {
+
+    model.addAttribute("employees", employeeService.findById(id));
+
+    return "edit_employees";
+  }
+
+  @PostMapping("/update/{id}")
+  public String updateEmployee(@PathVariable Long id,
+                               @ModelAttribute("employees") Employee employee,
+                               Model model) {
+
+    Employee existingEmployee = employeeService.findById(id);
+    existingEmployee.setId(id);
+    existingEmployee.setFirstName(employee.getFirstName());
+    existingEmployee.setLastName(employee.getLastName());
+    existingEmployee.setEmail(employee.getEmail());
+
+    employeeService.updateEmployee(existingEmployee);
+    return "redirect:/employees/list";
+  }
+
+
+  @GetMapping("/delete")
+  public String deleteEmployee(@RequestParam("employeeId") Long id) {
+
+    employeeService.deleteById(id);
+
+    return "redirect:/employees/list";
+  }
+
+
 }
